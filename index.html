@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#0b0d17">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="description" content="Vighna Slice - A fast-paced, obstacle-slicing HTML5 canvas game.">
+  <title>Vighna Slice | Obstacle Slasher</title>
+  
+  <!-- Modern Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Fullscreen Game Canvas -->
+  <canvas id="gameCanvas"></canvas>
+
+  <!-- UI Overlay Layer -->
+  <div id="uiOverlay" class="ui-container">
+    <header class="game-header">
+      <div class="top-stats-row">
+        <div class="stat-badge"><span class="stat-label">ROUND</span><span id="roundDisplay" class="stat-value">1</span></div>
+        <div class="stat-badge"><span class="stat-label">SCORE</span><span id="scoreDisplay" class="stat-value">0</span></div>
+        <div class="stat-badge"><span class="stat-label">STREAK</span><span id="streakDisplay" class="stat-value">0x</span></div>
+        <div class="stat-badge" title="Thali Plate Fullness"><span class="stat-label">THALI</span><span id="thaliDisplay" class="stat-value">0%</span></div>
+        <div class="stat-badge marigold-badge" title="Sacred Marigolds (Loss on 3rd Miss)">
+          <span class="stat-label">FLOWERS</span>
+          <div id="marigoldContainer" class="marigolds-row">
+            <span class="marigold-icon" id="marigold-1">🌼</span>
+            <span class="marigold-icon" id="marigold-2">🌼</span>
+            <span class="marigold-icon" id="marigold-3">🌼</span>
+          </div>
+        </div>
+        <button id="soundToggleBtn" class="stat-badge sound-toggle-badge" aria-label="Toggle Sound" title="Sound Mute/Unmute">
+          <span class="stat-label">AUDIO</span>
+          <span id="soundIcon" class="sound-icon">🔊</span>
+        </button>
+      </div>
+      <h1 class="game-title">VIGHNA <span class="accent-text">SLICE</span></h1>
+      <p class="game-subtitle">The Obstacle Breaker</p>
+
+      <!-- Streak Meter -->
+      <div class="streak-meter-container">
+        <div class="streak-meter-header">
+          <span class="meter-title">⚡ BLESSING METER</span>
+          <span id="meterPercent" class="meter-pct">0%</span>
+        </div>
+        <div class="streak-meter-track">
+          <div id="streakMeterFill" class="streak-meter-fill" style="width: 0%;"></div>
+        </div>
+      </div>
+
+      <!-- Boss Health Bar: Vighnasura -->
+      <div id="bossHealthContainer" class="boss-health-container hidden">
+        <div class="boss-health-header">
+          <span class="boss-health-title">👹 VIGHNASURA • OBSTACLE FORCE</span>
+          <span id="bossHealthText" class="boss-health-value">100 / 100 HP</span>
+        </div>
+        <div class="boss-health-track">
+          <div id="bossHealthFill" class="boss-health-fill" style="width: 100%;"></div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Start Screen Modal Overlay -->
+    <div id="startModal" class="start-modal">
+      <div class="modal-card start-card">
+        <div class="modal-badge">VINAYAKA CHATURTHI</div>
+        <h2 class="modal-title">VIGHNA <span class="accent-text">SLICE</span></h2>
+        <p class="modal-subtitle">The Sacred Temple Puja &amp; Offering Slasher</p>
+
+        <div class="instruction-box">
+          <div class="instruction-line">
+            <span class="inst-icon">✨</span>
+            <span>Swipe across sacred offerings into the Thali, avoid dark Vighnas, and build drag stroke combos across 3 lives!</span>
+          </div>
+        </div>
+
+        <div class="offerings-preview-row">
+          <span class="offering-chip" title="Modak Dumpling">🥟 Modak</span>
+          <span class="offering-chip" title="Motichoor Laddoo">🟠 Laddoo</span>
+          <span class="offering-chip" title="Red Hibiscus">🌺 Hibiscus</span>
+          <span class="offering-chip" title="Sacred Diya Lamp">🪔 Diya</span>
+          <span class="offering-chip" title="Durva Grass">🌿 Durva</span>
+        </div>
+
+        <button id="startBtn" class="start-button" aria-label="Play">
+          <span class="btn-shine"></span>
+          <span class="btn-icon">▶</span>
+          <span>PLAY</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Game Over Modal Overlay -->
+    <div id="gameOverModal" class="game-over-modal hidden">
+      <div class="modal-card">
+        <div id="gameOverBadge" class="modal-badge">PUJA CONCLUDED</div>
+        <h2 id="gameOverTitle" class="modal-title">TEMPLE BLESSINGS</h2>
+        <p id="gameOverSubtitle" class="modal-subtitle">Three sacred offerings were lost to obstacles</p>
+        
+        <div class="modal-stats">
+          <div class="modal-stat-box">
+            <span class="modal-stat-label">FINAL SCORE</span>
+            <span id="finalScoreDisplay" class="modal-stat-val">0</span>
+          </div>
+          <div class="modal-stat-box">
+            <span class="modal-stat-label">BEST STREAK</span>
+            <span id="bestStreakDisplay" class="modal-stat-val">0x</span>
+          </div>
+          <div class="modal-stat-box">
+            <span class="modal-stat-label">MAX COMBO</span>
+            <span id="bestComboDisplay" class="modal-stat-val">1x</span>
+          </div>
+        </div>
+
+        <!-- Normal Game Over Action (Level 1-3) -->
+        <button id="restartBtn" class="restart-button" aria-label="Play Again">
+          <span class="restart-icon">↻</span>
+          <span>PLAY AGAIN</span>
+        </button>
+
+        <!-- Boss Game Over Actions (Checkpoint Retry) -->
+        <div id="bossGameOverActions" class="boss-game-over-actions hidden">
+          <button id="retryBossBtn" class="restart-button retry-boss-btn" aria-label="Try Boss Again">
+            <span class="restart-icon">↻</span>
+            <span>TRY BOSS AGAIN</span>
+          </button>
+          <button id="restartLevel1Btn" class="secondary-button restart-level1-btn" aria-label="Restart from Level 1">
+            <span>Restart from Level 1</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grand Victory Modal Overlay -->
+    <div id="victoryModal" class="victory-modal hidden">
+      <div class="modal-card victory-card">
+        <div class="modal-badge victory-badge">✦ VIGHNAHARTHA TRIUMPH ✦</div>
+        <h2 class="modal-title victory-title">OBSTACLES <span class="accent-text">REMOVED</span></h2>
+        <p class="modal-subtitle">Ganesha's divine grace has dissolved all obstacles into peace</p>
+        
+        <div class="modal-stats victory-stats">
+          <div class="modal-stat-box">
+            <span class="modal-stat-label">TOTAL SCORE</span>
+            <span id="victoryScoreDisplay" class="modal-stat-val">0</span>
+          </div>
+          <div class="modal-stat-box">
+            <span class="modal-stat-label">ROUNDS COMPLETED</span>
+            <span id="victoryRoundsDisplay" class="modal-stat-val">3 + BOSS</span>
+          </div>
+          <div class="modal-stat-box">
+            <span class="modal-stat-label">BEST STREAK</span>
+            <span id="victoryStreakDisplay" class="modal-stat-val">0x</span>
+          </div>
+          <div class="modal-stat-box">
+            <span class="modal-stat-label">MAX COMBO</span>
+            <span id="victoryComboDisplay" class="modal-stat-val">1x</span>
+          </div>
+        </div>
+
+        <button id="victoryRestartBtn" class="restart-button victory-restart-button" aria-label="Begin A New Puja">
+          <span class="restart-icon">↻</span>
+          <span>BEGIN A NEW PUJA</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Ultimate Action Button -->
+    <button id="ultimateBtn" class="ultimate-button hidden" aria-label="Activate Ganesha's Blessing">
+      <span class="ultimate-glow-ring"></span>
+      <span class="ultimate-icon">𑁍</span>
+      <span class="ultimate-text">GANESHA'S BLESSING</span>
+      <span class="ultimate-subtext">[ READY • TAP OR SPACE ]</span>
+    </button>
+
+    <!-- On-Screen Control Hint Note (Shown on first load, fades on first swipe) -->
+    <div id="controlHintNote" class="control-hint-note" role="status" aria-live="polite">
+      <div class="hint-hand-icon">👆</div>
+      <span class="hint-text">Swipe to slice</span>
+    </div>
+
+    <!-- Round Transition Banner -->
+    <div id="roundBanner" class="round-banner-overlay hidden">
+      <div class="round-banner-badge" id="roundBannerBadge">ROUND 2</div>
+      <h2 class="round-banner-title" id="roundBannerTitle">DIFFICULTY INCREASED</h2>
+      <p class="round-banner-subtitle" id="roundBannerSub">Faster Offerings • More Vighna Obstacles</p>
+    </div>
+
+    <footer class="game-footer">
+      <div class="stat-pill" id="fpsDisplay">FPS: --</div>
+      <div class="stat-pill" id="resDisplay">RES: --</div>
+    </footer>
+  </div>
+
+  <!-- Game Logic (Zero build tools, direct execution) -->
+  <script src="game.js"></script>
+</body>
+</html>
