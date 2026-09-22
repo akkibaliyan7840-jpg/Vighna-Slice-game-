@@ -140,7 +140,7 @@ const hpBeforeSlice = engine.getBossHp();
 const sliceSuccess = engine.sliceWeakPoint(0);
 console.assert(sliceSuccess === true, 'Slicing exposed weak point must return true');
 console.assert(engine.getBossHp() === hpBeforeSlice - 20, `Boss HP should decrease by 20 bonus damage (was ${hpBeforeSlice}, now ${engine.getBossHp()})`);
-console.assert(elements['bossHealthText'].textContent === `${engine.getBossHp()} / 100 HP`, `Health text updated (got ${elements['bossHealthText'].textContent})`);
+console.assert(elements['bossHealthText'].textContent === `${engine.getBossHp()}`, `Health text updated (got ${elements['bossHealthText'].textContent})`);
 
 // Slicing again during the same window should NOT deal duplicate damage
 const duplicateSlice = engine.sliceWeakPoint(0);

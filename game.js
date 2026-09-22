@@ -197,10 +197,10 @@
     }
     if (bossHealthFill) {
       const pct = Math.max(0, Math.min(100, (bossHp / bossMaxHp) * 100));
-      bossHealthFill.style.width = `${pct}%`;
+      bossHealthFill.style.height = `${pct}%`; // vertical bar – grows from bottom
     }
     if (bossHealthText) {
-      bossHealthText.textContent = `${Math.max(0, Math.round(bossHp))} / ${bossMaxHp} HP`;
+      bossHealthText.textContent = `${Math.max(0, Math.round(bossHp))}`;
     }
     if (ultimateBtn) {
       if (streakMeter >= 100 && !isGameOver && !isOfferingAnimation && !isBossIntro) {
@@ -3152,9 +3152,8 @@
 
       playSliceSound(currentStrokeSlices);
 
-      // Split into two halves heading down toward the thali plate
-      const normalAngle = sliceAngle + Math.PI / 2;
-      const speed = 2.4;
+      // Split cleanly into two halves heading down toward the thali plate
+      const sepSpeed = 2.0;
       const tX = width / 2;
       const tRx = Math.min(width * 0.36, 145);
       const tRy = tRx * 0.40;
@@ -3163,28 +3162,28 @@
       slicedHalves.push({
         x: obj.x,
         y: obj.y,
-        vx: obj.vx + Math.cos(normalAngle) * speed,
-        vy: obj.vy - 1.8,
+        vx: -sepSpeed,
+        vy: Math.min(obj.vy * 0.25, 0) - 2.0,
         rot: obj.rot,
-        vRot: -3,
+        vRot: -1.8,
         type: obj.type,
         half: 'left',
-        gravity: 520,
-        targetX: tX + (Math.random() - 0.5) * (tRx * 1.2),
-        targetY: tY + (Math.random() - 0.5) * (tRy * 0.75),
+        gravity: 580,
+        targetX: tX + (Math.random() - 0.5) * (tRx * 1.1),
+        targetY: tY + (Math.random() - 0.5) * (tRy * 0.7),
         life: 1.0
       }, {
         x: obj.x,
         y: obj.y,
-        vx: obj.vx - Math.cos(normalAngle) * speed,
-        vy: obj.vy - 1.8,
+        vx: sepSpeed,
+        vy: Math.min(obj.vy * 0.25, 0) - 2.0,
         rot: obj.rot,
-        vRot: 3,
+        vRot: 1.8,
         type: obj.type,
         half: 'right',
-        gravity: 520,
-        targetX: tX + (Math.random() - 0.5) * (tRx * 1.2),
-        targetY: tY + (Math.random() - 0.5) * (tRy * 0.75),
+        gravity: 580,
+        targetX: tX + (Math.random() - 0.5) * (tRx * 1.1),
+        targetY: tY + (Math.random() - 0.5) * (tRy * 0.7),
         life: 1.0
       });
 
@@ -3303,7 +3302,8 @@
           scale: 1.3
         });
 
-        // Split halves falling toward thali
+        // Split halves falling cleanly toward thali
+        const sepSpeed = 2.0;
         const tX = width / 2;
         const tRx = Math.min(width * 0.36, 145);
         const tRy = tRx * 0.40;
@@ -3312,28 +3312,28 @@
         slicedHalves.push({
           x: obj.x,
           y: obj.y,
-          vx: (width * 0.5 - obj.x) * 0.025 - 1.2,
-          vy: -3.5,
+          vx: -sepSpeed,
+          vy: -2.8,
           rot: obj.rot,
-          vRot: -2.5,
+          vRot: -1.8,
           type: obj.type,
           half: 'left',
-          gravity: 500,
-          targetX: tX + (Math.random() - 0.5) * (tRx * 1.2),
-          targetY: tY + (Math.random() - 0.5) * (tRy * 0.75),
+          gravity: 580,
+          targetX: tX + (Math.random() - 0.5) * (tRx * 1.1),
+          targetY: tY + (Math.random() - 0.5) * (tRy * 0.7),
           life: 1.0
         }, {
           x: obj.x,
           y: obj.y,
-          vx: (width * 0.5 - obj.x) * 0.025 + 1.2,
-          vy: -3.5,
+          vx: sepSpeed,
+          vy: -2.8,
           rot: obj.rot,
-          vRot: 2.5,
+          vRot: 1.8,
           type: obj.type,
           half: 'right',
-          gravity: 500,
-          targetX: tX + (Math.random() - 0.5) * (tRx * 1.2),
-          targetY: tY + (Math.random() - 0.5) * (tRy * 0.75),
+          gravity: 580,
+          targetX: tX + (Math.random() - 0.5) * (tRx * 1.1),
+          targetY: tY + (Math.random() - 0.5) * (tRy * 0.7),
           life: 1.0
         });
       }
@@ -3731,10 +3731,12 @@
       const h = slicedHalves[i];
       h.vy += h.gravity * dt;
 
-      // Smooth horizontal steering towards assigned thali position
+      // Clean natural trajectory without any zigzag/oscillation:
+      // Air resistance smoothly dampens the outward separation burst
+      h.vx *= Math.max(0, 1 - 2.0 * dt);
+      // Smooth monotonic easing toward thali landing position (no overshoot, zero zigzag)
       if (h.targetX !== undefined) {
-        const steer = (h.targetX - h.x) * 3.5;
-        h.vx += steer * dt;
+        h.x += (h.targetX - h.x) * Math.min(1, 2.0 * dt);
       }
 
       h.x += h.vx * 60 * dt;

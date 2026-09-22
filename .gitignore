@@ -1,0 +1,11 @@
+# Archives
+*.zip
+*.tar.gz
+
+# Operating System
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log

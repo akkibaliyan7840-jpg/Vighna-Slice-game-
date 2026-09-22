@@ -223,7 +223,7 @@ console.assert(!elements['marigold-1'].classList.contains('dimmed'), 'Marigold 1
 console.assert(!elements['marigold-2'].classList.contains('dimmed'), 'Marigold 2 fresh');
 console.assert(!elements['marigold-3'].classList.contains('dimmed'), 'Marigold 3 fresh');
 console.assert(engine.getBossHp() === 100, `Boss HP MUST be reset to full 100 HP (got ${engine.getBossHp()})`);
-console.assert(elements['bossHealthText'].textContent === '100 / 100 HP', `Boss health text must show 100 / 100 HP`);
+console.assert(elements['bossHealthText'].textContent === '100', `Boss health text must show 100 (got ${elements['bossHealthText'].textContent})`);
 console.assert(engine.getStreakMeter() === 0, `Ultimate meter must reset to 0 (got ${engine.getStreakMeter()})`);
 console.assert(engine.getBossWaveNumber() === 0, `Boss wave number must reset to 0 (got ${engine.getBossWaveNumber()})`);
 console.assert(engine.getActiveWave() === null, 'Active wave must be null');

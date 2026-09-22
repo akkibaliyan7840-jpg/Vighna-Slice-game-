@@ -101,9 +101,9 @@ for (let s = 0; s < 125; s++) {
 
 console.assert(engine.isBossIntro() === false, 'Boss intro animation should have concluded');
 console.assert(!elements['bossHealthContainer'].classList.contains('hidden'), 'Boss health bar must be visible during active battle');
-console.assert(elements['bossHealthFill'].style.width === '100%', `Health fill width must be 100% (got ${elements['bossHealthFill'].style.width})`);
-console.assert(elements['bossHealthText'].textContent === '100 / 100 HP', `Health text must show 100 / 100 HP (got ${elements['bossHealthText'].textContent})`);
-console.log('  PASS: Boss intro concluded, #bossHealthContainer is now active with 100 / 100 HP.');
+console.assert(elements['bossHealthFill'].style.height === '100%', `Health fill height must be 100% (got ${elements['bossHealthFill'].style.height})`);
+console.assert(elements['bossHealthText'].textContent === '100', `Health text must show 100 (got ${elements['bossHealthText'].textContent})`);
+console.log('  PASS: Boss intro concluded, #bossHealthContainer is now active with 100 HP.');
 
 // 3. Verifying Escalating Wave Patterns
 console.log('\n3. Verifying Escalating Wave Formations (Wave 1 through 4):');
@@ -147,8 +147,8 @@ const hpBeforeWave1 = engine.getBossHp();
 clearWaveCleanly(wave1.id);
 
 console.assert(engine.getBossHp() === hpBeforeWave1 - 25, `Boss HP must decrease by 25 on clean clear (was ${hpBeforeWave1}, now ${engine.getBossHp()})`);
-console.assert(elements['bossHealthFill'].style.width === '75%', `Health fill must be 75% (got ${elements['bossHealthFill'].style.width})`);
-console.assert(elements['bossHealthText'].textContent === '75 / 100 HP', `Health text must show 75 / 100 HP (got ${elements['bossHealthText'].textContent})`);
+console.assert(elements['bossHealthFill'].style.height === '75%', `Health fill must be 75% (got ${elements['bossHealthFill'].style.height})`);
+console.assert(elements['bossHealthText'].textContent === '75', `Health text must show 75 (got ${elements['bossHealthText'].textContent})`);
 console.assert(engine.getActiveWave() === null, 'Active wave must be cleared after resolution');
 console.log('  PASS: Wave 1 cleanly cleared! Vighnasura took 25 HP damage (HP: 75/100).');
 
@@ -205,8 +205,8 @@ console.assert(w3Goods.length === 2, `Wave 3 must contain 2 Good offerings (got 
 
 clearWaveCleanly(wave3.id);
 console.assert(engine.getBossHp() === 50, `Boss HP should be 50 after 2nd clean wave (got ${engine.getBossHp()})`);
-console.assert(elements['bossHealthFill'].style.width === '50%', `Health fill must be 50% (got ${elements['bossHealthFill'].style.width})`);
-console.assert(elements['bossHealthText'].textContent === '50 / 100 HP', `Health text must show 50 / 100 HP (got ${elements['bossHealthText'].textContent})`);
+console.assert(elements['bossHealthFill'].style.height === '50%', `Health fill must be 50% (got ${elements['bossHealthFill'].style.height})`);
+console.assert(elements['bossHealthText'].textContent === '50', `Health text must show 50 (got ${elements['bossHealthText'].textContent})`);
 console.log('  PASS: Wave 3 cleanly cleared! Boss HP reduced to 50/100.');
 
 // 7. Test Wave 4 Escalation (6 items: 4 Vighnas, 2 Good) & Clean Clear (-25 HP)
@@ -239,8 +239,8 @@ clearWaveCleanly(wave5.id);
 console.assert(engine.getBossHp() === 0, `Boss HP should be 0 (got ${engine.getBossHp()})`);
 console.assert(engine.isBossDefeated() === true, 'Boss must be marked as defeated');
 console.assert(engine.isBossResolutionAnim() === true, 'Resolution animation must be active');
-console.assert(elements['bossHealthFill'].style.width === '0%', 'Health bar width should be 0%');
-console.assert(elements['bossHealthText'].textContent === '0 / 100 HP', 'Health text should show 0 / 100 HP');
+console.assert(elements['bossHealthFill'].style.height === '0%', 'Health bar height should be 0%');
+console.assert(elements['bossHealthText'].textContent === '0', 'Health text should show 0');
 console.log('  PASS: Vighnasura purified at 0 HP! Resolution animation commenced.');
 
 // 9. Verify Restart Resets Boss Health and Wave System Cleanly

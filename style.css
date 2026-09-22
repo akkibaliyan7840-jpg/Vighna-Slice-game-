@@ -80,65 +80,84 @@ html, body {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  animation: fadeInDown 0.8s ease-out;
+  animation: fadeInDown 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+/* Hide in-game title to keep the playfield vast, clean, and distraction-free */
+.game-header .game-title,
+.game-header .game-subtitle {
+  display: none !important;
 }
 
 .top-stats-row {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 8px;
-  margin-bottom: 6px;
+  align-items: center;
+  gap: 6px 8px;
+  margin-bottom: 4px;
   pointer-events: auto;
 }
 
 .stat-badge {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: rgba(15, 23, 42, 0.75);
-  border: 1px solid rgba(255, 183, 3, 0.25);
-  padding: 4px 14px;
+  background: rgba(13, 17, 34, 0.75);
+  border: 1px solid rgba(255, 183, 3, 0.22);
+  padding: 4px 12px;
   border-radius: 999px;
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-badge:hover {
+  border-color: rgba(255, 183, 3, 0.45);
+  box-shadow: 0 4px 16px rgba(255, 183, 3, 0.15);
 }
 
 .stat-label {
-  font-size: 0.68rem;
+  font-size: 0.64rem;
   font-weight: 700;
-  letter-spacing: 1px;
-  color: var(--gold-primary);
+  letter-spacing: 1.1px;
+  color: #ffd166;
+  text-transform: uppercase;
+  line-height: 1;
 }
 
 .stat-value {
   font-size: 0.88rem;
   font-weight: 800;
   color: #ffffff;
-  min-width: 24px;
+  min-width: 18px;
   text-align: right;
+  line-height: 1;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
 }
 
 .sound-toggle-badge {
   cursor: pointer;
-  background: rgba(15, 23, 42, 0.75);
-  border: 1px solid rgba(255, 183, 3, 0.35);
+  background: rgba(13, 17, 34, 0.75);
+  border: 1px solid rgba(255, 183, 3, 0.3);
   transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
   user-select: none;
 }
 
 .sound-toggle-badge:hover {
-  background: rgba(255, 183, 3, 0.15);
-  border-color: rgba(255, 183, 3, 0.7);
+  background: rgba(255, 183, 3, 0.2);
+  border-color: rgba(255, 183, 3, 0.8);
   transform: scale(1.05);
-  box-shadow: 0 0 12px rgba(255, 183, 3, 0.4);
+  box-shadow: 0 0 14px rgba(255, 183, 3, 0.4);
 }
 
 .sound-toggle-badge:active {
-  transform: scale(0.95);
+  transform: scale(0.94);
 }
 
 .sound-icon {
-  font-size: 0.88rem;
+  font-size: 0.85rem;
   line-height: 1;
   display: inline-block;
 }
@@ -526,11 +545,11 @@ html, body {
 
 /* Streak Meter */
 .streak-meter-container {
-  width: min(90vw, 320px);
-  margin-top: 8px;
+  width: min(86vw, 290px);
+  margin-top: 5px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 3px;
   pointer-events: auto;
 }
 
@@ -542,26 +561,28 @@ html, body {
 }
 
 .meter-title {
-  font-size: 0.7rem;
+  font-size: 0.64rem;
   font-weight: 700;
-  letter-spacing: 1px;
-  color: var(--gold-primary);
+  letter-spacing: 1.2px;
+  color: #ffd166;
+  text-transform: uppercase;
 }
 
 .meter-pct {
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-weight: 800;
   color: #fff2a3;
+  letter-spacing: 0.5px;
 }
 
 .streak-meter-track {
   width: 100%;
-  height: 10px;
-  background: rgba(15, 23, 42, 0.85);
-  border: 1px solid rgba(255, 183, 3, 0.35);
+  height: 8px;
+  background: rgba(11, 15, 29, 0.85);
+  border: 1px solid rgba(255, 183, 3, 0.3);
   border-radius: 999px;
   overflow: hidden;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6), 0 0 10px rgba(255, 183, 3, 0.15);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6), 0 0 12px rgba(255, 183, 3, 0.15);
   position: relative;
 }
 
@@ -585,81 +606,154 @@ html, body {
   animation: meterShine 1.8s infinite linear;
 }
 
-/* Boss Health Bar (Vighnasura Encounter) */
+/* Boss Vertical Health Bar – Fixed Right Edge (Vighnasura Encounter) */
 .boss-health-container {
-  width: min(92vw, 380px);
-  margin-top: 8px;
+  position: fixed;
+  right: max(14px, env(safe-area-inset-right));
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 50;
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  pointer-events: auto;
-  background: rgba(22, 12, 36, 0.85);
-  border: 1px solid rgba(239, 68, 68, 0.5);
-  box-shadow: 0 0 24px rgba(220, 38, 38, 0.35), inset 0 0 12px rgba(0, 0, 0, 0.65);
-  padding: 8px 14px 10px;
-  border-radius: 14px;
-  backdrop-filter: blur(14px);
-  animation: fadeInDown 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  align-items: center;
+  gap: 6px;
+  pointer-events: none;
+  animation: bossBarSlideIn 0.45s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .boss-health-container.hidden {
   display: none !important;
 }
 
-.boss-health-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 2px;
+@keyframes bossBarSlideIn {
+  from { opacity: 0; transform: translateY(-50%) translateX(30px); }
+  to   { opacity: 1; transform: translateY(-50%) translateX(0); }
 }
 
-.boss-health-title {
+/* Emoji icon at top */
+.boss-vbar-label {
+  font-size: 1.3rem;
+  line-height: 1;
+  filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.9));
+}
+
+/* Rotated title text */
+.boss-vbar-title {
   font-family: var(--font-display);
-  font-size: 0.74rem;
+  font-size: 0.6rem;
   font-weight: 900;
-  letter-spacing: 1.5px;
+  letter-spacing: 2px;
   color: #fca5a5;
-  text-shadow: 0 0 8px rgba(239, 68, 68, 0.75);
+  text-shadow: 0 0 8px rgba(239, 68, 68, 0.8);
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+  line-height: 1;
 }
 
-.boss-health-value {
-  font-size: 0.75rem;
-  font-weight: 800;
-  letter-spacing: 0.6px;
-  color: #fef08a;
-  text-shadow: 0 0 6px rgba(245, 158, 11, 0.6);
-}
-
-.boss-health-track {
-  width: 100%;
-  height: 12px;
+/* The vertical track container */
+.boss-vbar-track {
+  position: relative;
+  width: 16px;
+  height: clamp(120px, 28vh, 220px);
   background: rgba(12, 8, 20, 0.95);
-  border: 1px solid rgba(239, 68, 68, 0.45);
+  border: 1px solid rgba(239, 68, 68, 0.5);
   border-radius: 999px;
   overflow: hidden;
-  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.85), 0 0 12px rgba(239, 68, 68, 0.25);
-  position: relative;
+  box-shadow:
+    inset 0 2px 8px rgba(0, 0, 0, 0.85),
+    0 0 18px rgba(220, 38, 38, 0.4),
+    0 0 6px rgba(220, 38, 38, 0.2);
 }
 
-.boss-health-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #7f1d1d 0%, #dc2626 50%, #f59e0b 100%);
+/* The fill – grows from bottom, driven by JS height% */
+.boss-vbar-fill {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(0deg, #7f1d1d 0%, #dc2626 50%, #f59e0b 100%);
   border-radius: 999px;
-  transition: width 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: height 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   box-shadow: 0 0 16px rgba(239, 68, 68, 0.9);
-  position: relative;
 }
 
-.boss-health-fill::after {
+.boss-vbar-fill::after {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.45) 50%, transparent 100%);
-  animation: meterShine 2.0s infinite linear;
+  background: linear-gradient(0deg, transparent 0%, rgba(255, 255, 255, 0.35) 50%, transparent 100%);
+  animation: vbarShine 2.2s infinite linear;
+  border-radius: 999px;
+}
+
+@keyframes vbarShine {
+  0%   { transform: translateY(100%); }
+  100% { transform: translateY(-100%); }
+}
+
+/* Tick marks (4 notches for 25% / 50% / 75% visual guides) */
+.boss-vbar-ticks {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  pointer-events: none;
+}
+
+.boss-vbar-tick {
+  display: block;
+  height: 1px;
+  background: rgba(239, 68, 68, 0.35);
+  margin: 0 2px;
+}
+
+/* Numeric HP readout below the bar */
+.boss-vbar-hp-text {
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  font-weight: 900;
+  color: #fef08a;
+  text-shadow: 0 0 8px rgba(245, 158, 11, 0.7);
+  line-height: 1;
+  text-align: center;
+}
+
+.boss-vbar-hp-label {
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: #fca5a5;
+  text-shadow: 0 0 6px rgba(239, 68, 68, 0.6);
+  text-align: center;
+}
+
+/* Mobile compact (narrow screens) */
+@media (max-width: 480px) {
+  .boss-health-container {
+    right: max(8px, env(safe-area-inset-right));
+  }
+  .boss-vbar-track {
+    width: 12px;
+    height: clamp(90px, 24vh, 160px);
+  }
+  .boss-vbar-title {
+    font-size: 0.52rem;
+  }
+  .boss-vbar-hp-text {
+    font-size: 0.7rem;
+  }
+}
+
+/* Short landscape screens */
+@media (max-height: 680px) {
+  .boss-vbar-track {
+    height: clamp(80px, 20vh, 130px);
+  }
 }
 
 /* Ultimate Button */
@@ -768,24 +862,32 @@ html, body {
   text-align: center;
 }
 
-/* Footer Stats */
+/* Footer Stats - Clean, unobtrusive micro-pills */
 .game-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
+  pointer-events: none;
 }
 
 .stat-pill {
-  background: rgba(15, 23, 42, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  color: var(--text-muted);
-  font-size: 0.75rem;
+  background: rgba(10, 14, 28, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  color: rgba(148, 163, 184, 0.5);
+  font-size: 0.62rem;
   font-weight: 600;
-  letter-spacing: 1px;
-  padding: 6px 14px;
+  letter-spacing: 0.8px;
+  padding: 3px 10px;
   border-radius: 999px;
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(6px);
+  pointer-events: auto;
+  opacity: 0.45;
+  transition: opacity 0.2s ease;
+}
+
+.stat-pill:hover {
+  opacity: 1;
 }
 
 /* ==========================================================
@@ -1085,11 +1187,6 @@ html, body {
 
   .streak-meter-container {
     margin-top: 2px;
-  }
-
-  .boss-health-container {
-    margin-top: 2px;
-    padding: 4px 8px;
   }
 
   .modal-card {

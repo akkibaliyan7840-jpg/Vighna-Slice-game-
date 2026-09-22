@@ -56,16 +56,6 @@
         </div>
       </div>
 
-      <!-- Boss Health Bar: Vighnasura -->
-      <div id="bossHealthContainer" class="boss-health-container hidden">
-        <div class="boss-health-header">
-          <span class="boss-health-title">👹 VIGHNASURA • OBSTACLE FORCE</span>
-          <span id="bossHealthText" class="boss-health-value">100 / 100 HP</span>
-        </div>
-        <div class="boss-health-track">
-          <div id="bossHealthFill" class="boss-health-fill" style="width: 100%;"></div>
-        </div>
-      </div>
     </header>
 
     <!-- Start Screen Modal Overlay -->
@@ -197,6 +187,22 @@
       <div class="stat-pill" id="fpsDisplay">FPS: --</div>
       <div class="stat-pill" id="resDisplay">RES: --</div>
     </footer>
+    <!-- Boss Vertical Health Bar: Fixed to Right Edge -->
+    <div id="bossHealthContainer" class="boss-health-container hidden" aria-label="Vighnasura Health" role="meter">
+      <span class="boss-vbar-label">👹</span>
+      <span class="boss-vbar-title">VIGHNASURA</span>
+      <div class="boss-vbar-track">
+        <div id="bossHealthFill" class="boss-vbar-fill" style="height: 100%;"></div>
+        <div class="boss-vbar-ticks">
+          <span class="boss-vbar-tick"></span>
+          <span class="boss-vbar-tick"></span>
+          <span class="boss-vbar-tick"></span>
+          <span class="boss-vbar-tick"></span>
+        </div>
+      </div>
+      <span id="bossHealthText" class="boss-vbar-hp-text">100</span>
+      <span class="boss-vbar-hp-label">HP</span>
+    </div>
   </div>
 
   <!-- Game Logic (Zero build tools, direct execution) -->
